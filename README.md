@@ -33,7 +33,13 @@
 - 다시 들어가도 attention 뜨는데, 그러면 swap 파일을 삭제하면 된다. (하라는 대로 하면 된다)
 
 ### git 사용하기
-1. 커밋
+#### 커밋
+
+> 정의1 : The "commit" command is used to save your changes to the local repository.
+
+> 정의 2 : The git commit command captures a snapshot of the project's currently staged changes.
+
+- 스냅샷(사진)과 유사
 - 논리적인 변경, 유의미한 변화 있을 때마다 커밋 한다.
 - 오픈소스 커밋 내역 보면서 다른 사람들은 이렇게 쪼개는구나 알아보기
 - 롤백 : 이전 버전으로 돌아가는 것
