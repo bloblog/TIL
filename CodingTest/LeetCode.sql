@@ -1,3 +1,5 @@
+https://leetcode.com/study-plan/sql/?progress=x4yafwp3
+
 -- 595. Big Countries
 SELECT name, population, area
 FROM World
