@@ -111,3 +111,48 @@ SELECT (CASE WHEN count(id) = 0 THEN null
         ELSE max(salary) END) as SecondHighestSalary
 FROM employee
 WHERE salary != (SELECT max(salary) FROM employee);
+
+------------------------------------------------
+-- 175. Combine Two Tables
+SELECT firstName, lastName, city, state
+FROM Person a
+    LEFT JOIN Address b
+    ON a.personId = b.personID;
+    
+-- 1581. Customer Who Visited but Did Not Make Any Transactions
+SELECT customer_id, count(customer_id) as count_no_trans
+FROM visits a
+    LEFT JOIN transactions b
+    ON a.visit_id = b.visit_id
+WHERE transaction_id IS null
+GROUP BY 1;
+    
+-- 1148. Article Views I
+SELECT DISTINCT(author_id) as id
+FROM views
+WHERE author_id = viewer_id
+ORDER BY 1;
+
+-- 197. Rising Temperature
+    
+with temp_01 as
+(
+    SELECT DATE_ADD(recordDate, INTERVAL 1 day) as date, 
+    temperature as prev_temp
+    FROM weather
+)
+
+SELECT id
+FROM weather a
+LEFT JOIN temp_01 b
+ON a.recordDate = b.date
+WHERE temperature > prev_temp;
+    
+-- 607. Sales Person
+SELECT name
+FROM salesperson
+WHERE sales_id NOT IN (SELECT sales_id
+                        FROM orders a
+                        JOIN company b
+                            ON a.com_id = b.com_id
+                        WHERE name = "RED"); 
