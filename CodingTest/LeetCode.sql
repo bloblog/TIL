@@ -1,4 +1,4 @@
-https://leetcode.com/study-plan/sql/?progress=x4yafwp3
+[LeetCode SQL 코딩테스트](https://leetcode.com/study-plan/sql/?progress=x4yafwp3)
 
 -- 595. Big Countries
 SELECT name, population, area
@@ -156,3 +156,63 @@ WHERE sales_id NOT IN (SELECT sales_id
                         JOIN company b
                             ON a.com_id = b.com_id
                         WHERE name = "RED"); 
+
+----------------------------------------------
+--1141. User Activity for the Past 30 Days I
+    
+SELECT date_format(activity_date, "%Y-%m-%d") as day, 
+        count(distinct user_id) as active_users
+FROM activity
+WHERE activity_date <= str_to_date("2019-07-27", "%Y-%m-%d")
+    AND activity_date > date_sub(str_to_date("2019-07-27", "%Y-%m-%d"), interval 30 day)
+GROUP BY 1;
+
+-- 다른 방법 시도 : 속도 더 빠름
+    
+with temp_01 as
+(
+    SELECT *, str_to_date("2019-07-27", "%Y-%m-%d") as std
+    FROM activity
+)
+
+SELECT date_format(a.activity_date, "%Y-%m-%d") as day, 
+    count(distinct a.user_id) as active_users
+FROM activity a
+    JOIN temp_01 b
+    ON a.user_id = b.user_id
+WHERE a.activity_date <= std
+    AND a.activity_date > date_sub(std, interval 30 day)
+GROUP BY 1;
+    
+-- 1693. Daily Leads and Partners
+    
+SELECT date_id, make_name, count(distinct lead_id) as unique_leads, 
+    count(distinct partner_id) as unique_partners 
+FROM dailysales
+GROUP BY 1, 2;
+
+-- 1729. Find Followers Count
+    
+SELECT user_id, count(distinct follower_id) as followers_count
+FROM followers
+GROUP BY 1;
+
+-- 1378. Replace Employee ID With The Unique Identifier
+    
+SELECT unique_id, name
+FROM employees a
+    LEFT JOIN employeeUNI b
+    ON a.id = b.id;
+
+-- 1393. Capital Gain/Loss**
+    
+with temp_01 as
+(
+    SELECT *, (CASE WHEN operation = "Buy" THEN -price
+                WHEN operation = "Sell" THEN price END) as gainloss
+    FROM stocks
+)
+
+SELECT stock_name, sum(gainloss) as capital_gain_loss
+FROM temp_01
+GROUP BY stock_name;
