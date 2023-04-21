@@ -39,6 +39,7 @@ DELETE FROM Person
 WHERE id not in 
 	(SELECT ID FROM (SELECT min(id) as ID FROM Person GROUP BY email) temp_01);
 
+
 ---------------------------------
 
 -- 1667. Fix Names in a Table
@@ -73,7 +74,7 @@ FROM employees a
     LEFT JOIN salaries b
     ON a.employee_id = b.employee_id
 WHERE salary IS null
-UNION 
+UNION
 -- salary 기준으로 조인해서 name null 값인 id 찾기
 SELECT a.employee_id
 FROM salaries a
@@ -114,12 +115,14 @@ WHERE salary != (SELECT max(salary) FROM employee);
 
 ------------------------------------------------
 -- 175. Combine Two Tables
+
 SELECT firstName, lastName, city, state
 FROM Person a
     LEFT JOIN Address b
     ON a.personId = b.personID;
     
 -- 1581. Customer Who Visited but Did Not Make Any Transactions
+
 SELECT customer_id, count(customer_id) as count_no_trans
 FROM visits a
     LEFT JOIN transactions b
@@ -128,6 +131,7 @@ WHERE transaction_id IS null
 GROUP BY 1;
     
 -- 1148. Article Views I
+
 SELECT DISTINCT(author_id) as id
 FROM views
 WHERE author_id = viewer_id
@@ -149,6 +153,7 @@ ON a.recordDate = b.date
 WHERE temperature > prev_temp;
     
 -- 607. Sales Person
+
 SELECT name
 FROM salesperson
 WHERE sales_id NOT IN (SELECT sales_id
@@ -204,7 +209,7 @@ FROM employees a
     LEFT JOIN employeeUNI b
     ON a.id = b.id;
 
--- 1393. Capital Gain/Loss**
+-- 1393. Capital Gain/Loss
     
 with temp_01 as
 (
@@ -216,3 +221,65 @@ with temp_01 as
 SELECT stock_name, sum(gainloss) as capital_gain_loss
 FROM temp_01
 GROUP BY stock_name;
+-----------------------------------------------------
+-- 586. Customer Placing the Largest Number of Orders
+    
+with temp_01 as
+(
+    SELECT customer_number, count(customer_number) as cnt
+    FROM orders
+    GROUP BY 1
+)
+
+SELECT customer_number
+FROM temp_01
+WHERE cnt = (SELECT max(cnt) FROM temp_01);
+    
+-- 511. Game Play Analysis I
+    
+SELECT player_id, min(event_date) as first_login
+FROM activity
+GROUP BY 1;
+    
+-- 1890. The Latest Login in 2020
+    
+SELECT user_id, max(time_stamp) as last_stamp
+FROM logins
+WHERE YEAR(time_stamp) = 2020
+GROUP BY 1;
+    
+-- 1741. Find Total Time Spent by Each Employee
+    
+SELECT event_day as day, emp_id, sum(out_time-in_time) as total_time
+FROM employees
+GROUP BY 1, 2;
+
+-- 1251. Average Selling Price
+
+SELECT a.product_id, round(sum(price*units)/sum(units), 2) as average_price
+FROM unitssold a
+    JOIN prices b
+    ON a.product_id = b.product_id
+    AND purchase_date BETWEEN start_date AND end_date
+GROUP BY 1;
+    
+--1068. Product Sales Analysis I
+    
+SELECT product_name, year, price
+FROM sales a
+    JOIN product b
+    ON a.product_id = b.product_id;
+
+-- 1204. Last Person to Fit in the Bus
+    
+with temp_01 as
+(
+    SELECT *, sum(weight) over (order by turn) as total_weight
+    FROM Queue
+)
+
+SELECT person_name
+FROM temp_01
+WHERE total_weight <= 1000
+ORDER BY turn desc
+LIMIT 1;
