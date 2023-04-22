@@ -283,3 +283,42 @@ FROM temp_01
 WHERE total_weight <= 1000
 ORDER BY turn desc
 LIMIT 1;
+
+-------------------------
+--1407. Top Travellers
+    
+SELECT name, case when distance is null then 0 else sum(distance) end as travelled_distance
+FROM Users a
+    LEFT JOIN Rides b
+    ON a.id = b.user_id
+GROUP BY a.id
+ORDER BY 2 desc, 1;
+
+--1158. Market Analysis I
+    
+with temp_01 as
+(
+    SELECT *
+    FROM orders
+    WHERE YEAR(order_date) = 2019
+)
+SELECT user_id as buyer_id, join_date, count(order_id) as orders_in_2019
+FROM users a
+    LEFT JOIN temp_01 b ON a.user_id = b.buyer_id
+GROUP BY user_id;
+
+-- 1327. List the Products Ordered in a Period**
+    
+SELECT product_name, sum(unit) as unit
+FROM products a
+    JOIN orders b ON a.product_id = b.product_id
+WHERE YEAR(order_date) = 2020 AND MONTH(order_date) = 2
+GROUP BY 1
+HAVING sum(unit) >= 100;
+
+-- 610. Triangle Judgement
+
+SELECT *, 
+    (case when x >= y+z or y >= x+z or z >= x+y then "No"
+    else "Yes" end) as triangle
+FROM triangle;
