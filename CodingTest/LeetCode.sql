@@ -322,3 +322,61 @@ SELECT *,
     (case when x >= y+z or y >= x+z or z >= x+y then "No"
     else "Yes" end) as triangle
 FROM triangle;
+
+--------------------------
+-- 1321. Restaurant Growth
+ with temp_01 as
+(
+    SELECT visited_on, sum(amount) as day_amount
+    FROM customer
+    GROUP BY 1
+),
+temp_02 as
+(
+    SELECT visited_on,
+    min(visited_on) over() as first_day,
+    sum(day_amount) over(rows between 6 preceding and current row) as amount
+    FROM temp_01 
+)
+
+SELECT visited_on, amount, round(amount/7, 2) as average_amount
+FROM temp_02
+WHERE visited_on >= date_add(first_day, interval 6 day);
+    
+
+-- 1050. Actors and Directors Who Cooperated At Least Three Times
+    
+SELECT actor_id, director_id
+FROM actordirector
+GROUP BY 1, 2
+HAVING count(timestamp) >= 3;
+    
+-- 1280. Students and Examinations
+with temp_01 as
+(
+    SELECT *
+    FROM students a
+        CROSS JOIN subjects b
+    ), temp_02 as
+(
+    SELECT student_id, subject_name, count(subject_name) as attended_exams
+    FROM examinations
+    GROUP BY 1, 2
+    )
+
+SELECT a.student_id, student_name, a.subject_name, ifnull(attended_exams, 0) as attended_exams
+FROM temp_01 a
+    LEFT JOIN temp_02 b
+    ON a.student_id = b.student_id AND a.subject_name = b.subject_name
+ORDER BY 1, 3;
+
+
+-- 570. Managers with at Least 5 Direct Reports
+    
+SELECT name
+FROM employee a
+        JOIN (SELECT managerID FROM employee
+        WHERE managerId is not null
+        GROUP BY managerId
+        HAVING count(id) >= 5) b
+        ON a.id = b.managerId;
