@@ -380,3 +380,40 @@ FROM employee a
         GROUP BY managerId
         HAVING count(id) >= 5) b
         ON a.id = b.managerId;
+
+-------------------------------------------
+-- 1045. Customers Who Bought All Products
+
+SELECT customer_id
+FROM customer
+GROUP BY customer_id
+HAVING count(distinct product_key) = (SELECT count(*) FROM product);
+
+-- 1164. Product Price at a Given Date
+
+with temp_01 as
+(
+    SELECT *, max(change_date) over(partition by product_id) as std_date
+    FROM products
+    WHERE change_date <= str_to_date('2019-08-16', '%Y-%m-%d')
+), temp_02 as
+(
+    SELECT *, min(change_date) over(partition by product_id) as min_date
+    FROM products
+)
+
+SELECT product_id, new_price as price
+FROM temp_01
+WHERE change_date = std_date
+UNION
+SELECT product_id, 10 as price
+FROM temp_02
+WHERE min_date > str_to_date('2019-08-16', '%Y-%m-%d');
+
+-- 1075. Project Employees I
+
+SELECT project_id, round(avg(experience_years), 2) as average_years
+FROM project a 
+    JOIN employee b 
+    ON a.employee_id = b.employee_id
+GROUP BY 1;
