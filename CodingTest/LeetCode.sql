@@ -417,3 +417,79 @@ FROM project a
     JOIN employee b 
     ON a.employee_id = b.employee_id
 GROUP BY 1;
+
+--------------------------------
+--1193. Monthly Transactions I
+    
+with temp_01 as
+(
+    SELECT *, case when state = "approved" then 1 else 0 end as state_num,
+    case when state = "approved" then amount else 0 end as app_amount
+    FROM transactions
+)
+
+SELECT date_format(a.trans_date, '%Y-%m') as month, a.country, count(a.trans_date) as trans_count, sum(state_num) as approved_count, sum(a.amount) as trans_total_amount, sum(app_amount) as approved_total_amount
+FROM transactions a 
+    JOIN temp_01 b
+    ON a.id = b.id
+GROUP BY 1, 2;
+
+-- 1341. Movie Rating
+
+with temp_01 as
+(
+    SELECT name, count(a.user_id) 
+    FROM movierating a 
+        JOIN users b 
+        ON a.user_id = b.user_id
+    GROUP BY a.user_id
+    ORDER BY 2 desc, 1
+    LIMIT 1
+),
+temp_02 as
+(
+    SELECT title, avg(rating)
+    FROM movierating a
+        JOIN movies b
+        ON a.movie_id = b.movie_id
+    WHERE YEAR(created_at) = 2020 AND MONTH(created_at) = 2
+    GROUP BY 1
+    ORDER BY 2 desc, 1
+    LIMIT 1
+)
+
+SELECT name as results
+FROM temp_01
+UNION
+SELECT title as results
+FROM temp_02;
+
+-- 1517. Find Users With Valid E-Mails
+
+SELECT *
+FROM users
+WHERE mail REGEXP "^[a-zA-Z][a-zA-Z0-9._-]*@leetcode\\.com";
+
+-- 1084. Sales Analysis III
+
+with temp_01 as
+(
+    SELECT product_id, count(*) as sold_cnt
+    FROM sales
+    GROUP BY 1
+    ),
+temp_02 as
+(
+    SELECT product_id, count(*) as sold_cnt_2019_1Q
+    FROM sales
+    WHERE YEAR(sale_date) = 2019 AND MONTH(sale_date) IN (1,2,3)
+    GROUP BY 1
+    )
+
+SELECT a.product_id, product_name
+FROM temp_01 a 
+    JOIN temp_02 b 
+    ON a.product_id = b.product_id
+    JOIN product c
+    ON a.product_id = c.product_id
+WHERE sold_cnt = sold_cnt_2019_1Q;
