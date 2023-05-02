@@ -493,3 +493,44 @@ FROM temp_01 a
     JOIN product c
     ON a.product_id = c.product_id
 WHERE sold_cnt = sold_cnt_2019_1Q;
+
+------------------------------
+-- 550. Game Play Analysis IV
+
+with temp_01 as
+(
+    SELECT player_id, min(event_date) over(partition by player_id) as event_date, lead(event_date) over(partition by player_id order by event_date) as return_date
+    FROM activity
+)
+
+SELECT ROUND(count(distinct player_id) / (SELECT count(distinct player_id) FROM activity), 2) as fraction
+FROM temp_01
+WHERE datediff(return_date, event_date) <= 1;
+
+[LeetCode 링크](https://leetcode.com/studyplan/top-sql-50/)
+
+-- 1683. Invalid Tweets
+
+SELECT tweet_id
+FROM tweets
+WHERE length(content) > 15;
+
+-- 1661. Average Time of Process per Machine
+
+with temp_01 as
+(
+    SELECT machine_id, process_id, timestamp as start_time
+    FROM activity
+    WHERE activity_type = "start"
+), temp_02 as
+(
+    SELECT machine_id, process_id, timestamp as end_time
+    FROM activity
+    WHERE activity_type = "end"
+)
+
+SELECT a.machine_id, ROUND(sum(end_time-start_time)/count(a.process_id), 3) as processing_time
+FROM temp_01 a
+    JOIN temp_02 b
+    ON a.machine_id = b.machine_id AND a.process_id = b.process_id
+GROUP BY 1;
