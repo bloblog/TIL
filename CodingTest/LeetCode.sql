@@ -534,3 +534,35 @@ FROM temp_01 a
     JOIN temp_02 b
     ON a.machine_id = b.machine_id AND a.process_id = b.process_id
 GROUP BY 1;
+
+-----------------------
+-- 577. Employee Bonus
+
+SELECT name, bonus
+FROM employee a
+    LEFT JOIN bonus b
+    ON a.empId = b.empId
+WHERE bonus < 1000 OR bonus is null;
+
+-- 1934. Confirmation Rate
+with temp_01 as
+(
+    SELECT user_id, count(*) as confirm
+    FROM confirmations
+    WHERE action = 'confirmed'
+    GROUP BY 1
+    )
+SELECT a.user_id, 
+    case when confirm is null then 0 else ROUND(confirm/count(action), 2) end as confirmation_rate
+FROM signups a 
+    LEFT JOIN confirmations b
+    ON a.user_id = b.user_id
+    LEFT JOIN temp_01 c
+    ON a.user_id = c.user_id
+GROUP BY 1;
+
+-- 620. Not Boring Movies
+SELECT *
+FROM cinema
+WHERE id % 2 = 1 AND description <> 'boring'
+ORDER BY rating desc;
