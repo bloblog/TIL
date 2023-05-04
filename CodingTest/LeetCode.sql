@@ -566,3 +566,36 @@ SELECT *
 FROM cinema
 WHERE id % 2 = 1 AND description <> 'boring'
 ORDER BY rating desc;
+
+-------------------------------------------------
+-- 1633. Percentage of Users Attended a Contest
+    
+SELECT contest_id, ROUND(count(user_id) / (SELECT count(user_id) FROM users) * 100, 2) as percentage
+FROM register
+GROUP BY 1
+ORDER BY 2 desc, 1;
+
+-- 1211. Queries Quality and Percentage
+
+with temp_01 as
+(
+    SELECT query_name, count(*) as poor_num
+    FROM queries 
+    WHERE rating < 3 
+    GROUP BY 1
+    )
+SELECT a.query_name, ROUND(sum(rating / position) / count(*), 2) as quality, IFNULL(ROUND(poor_num / count(*) * 100, 2), 0) as poor_query_percentage
+FROM queries a LEFT JOIN temp_01 b ON a.query_name = b.query_name
+GROUP BY 1;
+
+-- 1174. Immediate Food Delivery II
+
+with temp_01 as
+(
+    SELECT *, min(order_date) over(partition by customer_id order by order_date) as first_order, (case when order_date = customer_pref_delivery_date then 1 else 0 end) as imm_or_sch
+    FROM delivery
+    -- GROUP BY customer_id
+)
+SELECT ROUND(sum(imm_or_sch) / count(*) * 100, 2) as immediate_percentage
+FROM temp_01
+WHERE order_date = first_order;
