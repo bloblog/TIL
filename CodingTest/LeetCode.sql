@@ -599,3 +599,43 @@ with temp_01 as
 SELECT ROUND(sum(imm_or_sch) / count(*) * 100, 2) as immediate_percentage
 FROM temp_01
 WHERE order_date = first_order;
+
+----------------------------------------------------------
+-- 2356. Number of Unique Subjects Taught by Each Teacher
+
+SELECT teacher_id, count(distinct subject_id) as cnt
+FROM teacher
+GROUP BY 1;
+
+-- 1070. Product Sales Analysis III
+
+-- 집계함수 사용
+
+with temp_01 as
+(
+    SELECT *, min(year) as first_year
+    FROM sales
+    GROUP BY product_id
+)
+
+SELECT a.product_id, first_year, a.quantity, a.price
+FROM sales a JOIN temp_01 b ON a.product_id = b.product_id
+WHERE a.year = first_year;
+
+-- 윈도우 함수 사용
+
+with temp_01 as
+(
+    SELECT *, min(year) over(partition by product_id order by year) as first_year
+    FROM sales
+)
+
+SELECT product_id, first_year, quantity, price
+FROM temp_01
+WHERE year = first_year;
+
+-- 596. Classes More Than 5 Students
+
+SELECT class
+FROM (SELECT *, count(student) as cnt FROM courses GROUP BY class) a
+WHERE cnt >= 5;
