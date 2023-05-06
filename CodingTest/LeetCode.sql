@@ -639,3 +639,43 @@ WHERE year = first_year;
 SELECT class
 FROM (SELECT *, count(student) as cnt FROM courses GROUP BY class) a
 WHERE cnt >= 5;
+
+------------------------------
+-- 619. Biggest Single Number
+
+with temp_01 as
+(
+    SELECT num, count(*) as cnt
+    FROM mynumbers
+    GROUP BY 1
+    HAVING cnt = 1
+    )
+
+SELECT IFNULL(MAX(num), null) as num
+FROM temp_01;
+
+-- 1731. The Number of Employees Which Report to Each Employee
+
+with temp_01 as
+(
+    SELECT reports_to, count(employee_id) as reports_count, round(avg(age),0) as average_age
+    FROM employees
+    WHERE reports_to is not null
+    GROUP BY 1
+    )
+SELECT employee_id, name, reports_count, average_age
+FROM employees a 
+    JOIN temp_01 b 
+    ON a.employee_id = b.reports_to
+ORDER BY 1;
+
+-- 1789. Primary Department for Each Employee
+
+with temp_01 as
+(
+    SELECT *, count(department_id) over(partition by employee_id) as belonged_cnt
+    FROM employee
+    )
+SELECT employee_id, department_id
+FROM temp_01
+WHERE belonged_cnt = 1 or primary_flag = "Y";
