@@ -679,3 +679,51 @@ with temp_01 as
 SELECT employee_id, department_id
 FROM temp_01
 WHERE belonged_cnt = 1 or primary_flag = "Y";
+
+----------------------------
+-- 180. Consecutive Numbers
+    
+with temp_01 as
+(
+    SELECT *, lag(num) over(ORDER BY id) as lag_num, 
+        lead(num) over(ORDER BY id) as lead_num
+    FROM logs
+    ), temp_02 as (
+    SELECT id, num, lag_num, lead_num, 
+        case when num = lag_num AND lag_num = lead_num then 1 else 0 end as is_con
+    FROM temp_01
+    )
+
+SELECT distinct num as ConsecutiveNums
+FROM temp_02
+WHERE is_con = 1;
+
+-- 1907. Count Salary Categories
+    
+with temp_01 as
+(
+    SELECT *, 
+        case when income > 50000 then "High Salary" 
+        when income between 20000 and 50000 then "Average Salary"
+        else "Low Salary" end as category
+    FROM accounts
+)
+SELECT 'Low Salary' as category, count(*) as accounts_count
+FROM temp_01
+WHERE category = 'Low Salary'
+UNION
+SELECT 'Average Salary', count(*)
+FROM temp_01
+WHERE category = 'Average Salary'
+UNION
+SELECT 'High Salary', count(*)
+FROM temp_01
+WHERE category = 'High Salary';
+
+-- 1978. Employees Whose Manager Left the Company
+    
+SELECT employee_id
+FROM employees
+WHERE manager_id not in (SELECT employee_id FROM employees)
+    AND salary < 30000
+ORDER BY 1;
