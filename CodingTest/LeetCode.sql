@@ -727,3 +727,74 @@ FROM employees
 WHERE manager_id not in (SELECT employee_id FROM employees)
     AND salary < 30000
 ORDER BY 1;
+
+------------------------
+-- 626. Exchange Seats
+    
+with temp_01 as
+(
+SELECT *, lag(id) over(order by id) as lag_id, IFNULL(lead(id) over(order by id), id) as lead_id
+FROM seat
+), temp_02 as
+(SELECT id, student, case when id % 2 = 1 then lead_id else lag_id end as swap
+FROM temp_01)
+
+SELECT swap as id, student
+FROM temp_02
+ORDER BY 1;
+
+-- 602. Friend Requests II: Who Has the Most Friends
+    
+with temp_01 as
+(
+    SELECT requester_id as id, count(requester_id) as cnt
+    FROM requestaccepted
+    GROUP BY 1
+    UNION ALL
+    SELECT accepter_id, count(accepter_id)
+    FROM requestaccepted
+    GROUP BY 1
+    )
+SELECT id, sum(cnt) as num
+FROM temp_01
+GROUP BY 1
+ORDER BY 2 desc
+LIMIT 1;
+
+-- 585. Investments in 2016
+    
+SELECT ROUND(sum(tiv_2016), 2) as tiv_2016
+FROM insurance a
+WHERE tiv_2015 in (SELECT tiv_2015 FROM insurance GROUP BY 1 HAVING count(tiv_2015) > 1)
+    AND (lat, lon) not in (SELECT lat, lon FROM insurance GROUP BY 1, 2 HAVING count(*) > 1);
+
+-- 더 효율 좋은 버전
+with temp_01 as
+(
+    SELECT tiv_2015
+    FROM insurance 
+    GROUP BY tiv_2015 
+    HAVING count(tiv_2015) > 1
+    ), temp_02 as
+    (
+    SELECT lat, lon
+    FROM insurance 
+    GROUP BY lat, lon
+    HAVING count(*) > 1
+    )
+
+SELECT round(sum(tiv_2016), 2) as tiv_2016
+FROM insurance
+WHERE tiv_2015 in (SELECT * FROM temp_01) AND (lat, lon) not in (SELECT * FROM temp_02);
+
+-- 185. Department Top Three Salaries
+    
+with temp_01 as
+(
+    SELECT *, dense_rank() over(partition by departmentID order by salary desc) as rnk
+    FROM employee
+)
+
+SELECT b.name as Department, a.name as Employee, salary as Salary
+FROM temp_01 a JOIN department b ON a.departmentId = b.id
+WHERE rnk <= 3;
