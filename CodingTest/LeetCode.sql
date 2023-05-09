@@ -798,3 +798,41 @@ with temp_01 as
 SELECT b.name as Department, a.name as Employee, salary as Salary
 FROM temp_01 a JOIN department b ON a.departmentId = b.id
 WHERE rnk <= 3;
+
+----------------------------
+[LeetCode SQL 코딩테스트 링크](https://leetcode.com/problemset/database/)
+
+-- 178. Rank Scores
+-- 컬럼명과 예약어가 겹칠 때 `` 사용하기
+   
+SELECT score, dense_rank() over(order by score desc) as `rank`
+FROM scores
+ORDER BY 1 desc;
+
+-- 181. Employees Earning More Than Their Managers
+    
+SELECT a.name as Employee
+FROM employee a 
+    JOIN employee b 
+    ON a.managerId = b.id
+WHERE a.salary > b.salary;
+
+-- 182. Duplicate Emails
+    
+SELECT email as Email
+FROM person
+GROUP BY 1
+HAVING count(*) > 1;
+
+-- 184. Department Highest Salary
+    
+with temp_01 as
+    (
+    SELECT departmentId, name, Salary, dense_rank() over(partition by departmentId order by salary desc) as rnk
+    FROM employee
+    )
+SELECT b.name as Department, a.name as Employee, Salary
+FROM temp_01 a
+    JOIN department b
+    ON a.departmentId = b.id
+WHERE rnk = 1;
