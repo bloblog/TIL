@@ -1,5 +1,5 @@
 
-[HackerRank 코딩테스트 링크](https://www.hackerrank.com/domains/sql?filters[status][]=unsolved&filters[status][]=solved)
+https://www.hackerrank.com/domains/sql?filters[status][]=unsolved&filters[status][]=solved
 
 -- Weather Observation Station 5
 

@@ -1,4 +1,4 @@
-[LeetCode SQL 코딩테스트](https://leetcode.com/study-plan/sql/?progress=x4yafwp3)
+https://leetcode.com/study-plan/sql/?progress=x4yafwp3
 
 -- 595. Big Countries
 SELECT name, population, area
@@ -307,7 +307,7 @@ FROM users a
     LEFT JOIN temp_01 b ON a.user_id = b.buyer_id
 GROUP BY user_id;
 
--- 1327. List the Products Ordered in a Period**
+-- 1327. List the Products Ordered in a Period
     
 SELECT product_name, sum(unit) as unit
 FROM products a
@@ -323,7 +323,7 @@ SELECT *,
     else "Yes" end) as triangle
 FROM triangle;
 
---------------------------
+---------------------------
 -- 1321. Restaurant Growth
  with temp_01 as
 (
@@ -507,7 +507,7 @@ SELECT ROUND(count(distinct player_id) / (SELECT count(distinct player_id) FROM 
 FROM temp_01
 WHERE datediff(return_date, event_date) <= 1;
 
-[LeetCode 링크](https://leetcode.com/studyplan/top-sql-50/)
+https://leetcode.com/studyplan/top-sql-50/
 
 -- 1683. Invalid Tweets
 
@@ -800,7 +800,7 @@ FROM temp_01 a JOIN department b ON a.departmentId = b.id
 WHERE rnk <= 3;
 
 ----------------------------
-[LeetCode SQL 코딩테스트 링크](https://leetcode.com/problemset/database/)
+https://leetcode.com/problemset/database/
 
 -- 178. Rank Scores
 -- 컬럼명과 예약어가 겹칠 때 `` 사용하기
