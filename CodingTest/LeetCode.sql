@@ -890,3 +890,33 @@ SELECT id,
     sum(Dec_Revenue) as Dec_Revenue
 FROM temp_01
 GROUP BY id;
+
+---------------------------------
+-- 601. Human Traffic of Stadium
+
+with temp_01 as
+(
+    SELECT *, lead(people, 1) over(order by id) as next_day,
+        lead(people, 2) over(order by id) as next_two_day
+    FROM stadium
+    ), temp_02 as
+    (
+        SELECT *
+        FROM temp_01
+        WHERE people >= 100 and next_day >= 100 and next_two_day >= 100
+    )
+SELECT *
+FROM stadium
+WHERE id in 
+    (SELECT id FROM temp_02 
+    UNION SELECT id+1 FROM temp_02 
+    UNION SELECT id+2 FROM temp_02);
+    
+-- 1587. Bank Account Summary II
+SELECT name, balance
+FROM (SELECT account, sum(amount) as balance
+      FROM transactions
+      GROUP BY 1
+      HAVING sum(amount) > 10000) a
+  JOIN users b
+  ON a.account = b.account;
