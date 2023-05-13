@@ -52,3 +52,48 @@ FROM (SELECT * FROM temp_01 WHERE occupation = 'Doctor') a
     ON b.ord = c.ord
     LEFT JOIN (SELECT * FROM temp_01 WHERE occupation = 'Actor') d
     ON b.ord = d.ord;
+
+--------------------
+-- New Companies
+
+SELECT a.company_code, max(founder), 
+    count(distinct b.lead_manager_code), 
+    count(distinct c.senior_manager_code), 
+    count(distinct d.manager_code), 
+    count(distinct employee_code)
+FROM company a
+    LEFT JOIN lead_manager b
+    ON a.company_code = b.company_code
+    LEFT JOIN senior_manager c
+    ON a.company_code = c.company_code
+    LEFT JOIN manager d
+    ON a.company_code = d.company_code
+    LEFT JOIN employee e
+    ON a.company_code = e.company_code
+GROUP BY 1
+ORDER BY 1;
+    
+-- Binary Tree Nodes
+
+SELECT N, 
+    case when P is null then 'Root' 
+    when N in (SELECT distinct P FROM BST) then "Inner"
+    else "Leaf" end
+FROM BST
+ORDER BY 1;
+    
+
+-- The PADS
+-- MySQL은 union 정렬 문제, concat 함수 문제 때문에 MS SQL로 진행
+
+SELECT concat(name, case when occupation = "Actor" then "(A)"
+                        when occupation = "Doctor" then "(D)"
+                        when occupation = "Professor" then "(P)"
+                        else "(S)" end)
+FROM occupations 
+ORDER BY name
+
+SELECT concat("There are a total of ", count(name), " ", lower(occupation), "s.")
+FROM occupations
+GROUP BY occupation
+ORDER BY count(name), occupation;
