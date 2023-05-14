@@ -97,3 +97,21 @@ SELECT concat("There are a total of ", count(name), " ", lower(occupation), "s."
 FROM occupations
 GROUP BY occupation
 ORDER BY count(name), occupation;
+
+-----------------------------
+-- The Blunder
+-- ceil은 자릿수 지정하지 않음! 주의
+
+with temp_01 as
+(
+    SELECT *, replace(salary, 0, "") as mistake
+    FROM employees
+    )
+SELECT ceil(avg(salary)-avg(mistake))
+FROM temp_01;
+    
+-- Top Earners
+
+SELECT max(months*salary), count(*)
+FROM employee
+WHERE months*salary = (SELECT max(months*salary) FROM employee);
