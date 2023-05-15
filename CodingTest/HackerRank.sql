@@ -115,3 +115,26 @@ FROM temp_01;
 SELECT max(months*salary), count(*)
 FROM employee
 WHERE months*salary = (SELECT max(months*salary) FROM employee);
+
+------------------------------------
+-- Weather Observation Station 19
+
+SELECT format(sqrt(
+    power(max(long_w) - min(long_w), 2) + power(max(lat_n) - min(lat_n), 2)
+    ), 4)
+FROM station;
+    
+-- Weather Observation Station 20
+-- Wrong Answer
+
+with temp_01 as
+(
+    SELECT lat_n, row_number() over(order by lat_n) as rnk
+    FROM station
+    )
+SELECT round(case when length(lat_n) % 2 = 1 then 
+        (SELECT lat_n FROM temp_01 WHERE rnk = ceil(length(lat_n)/2))
+    else (SELECT avg(lat_n) FROM temp_01 WHERE rnk in (length(lat_n)/2, length(lat_n)/2+1))
+    end, 4)
+FROM temp_01
+LIMIT 1;
