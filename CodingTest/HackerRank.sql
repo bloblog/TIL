@@ -138,3 +138,53 @@ SELECT round(case when length(lat_n) % 2 = 1 then
     end, 4)
 FROM temp_01
 LIMIT 1;
+
+----------------------
+-- Top Competitors
+
+SELECT a.hacker_id, max(name)
+FROM submissions a
+    JOIN challenges b
+    ON a.challenge_id = b.challenge_id
+    JOIN difficulty c 
+    ON b.difficulty_level = c.difficulty_level
+    JOIN hackers d
+    ON a.hacker_id = d.hacker_id
+WHERE a.score = c.score
+GROUP BY hacker_id
+HAVING count(a.challenge_id) > 1
+ORDER BY count(a.challenge_id) desc, hacker_id;
+    
+-- The Report (MS SQL 활용)
+
+SELECT name, grade, marks
+FROM students a
+    JOIN grades b
+    ON a.marks between b.min_mark and b.max_mark
+WHERE grade >= 8
+ORDER BY 2 desc, 1;
+
+SELECT NULL, grade, marks
+FROM students a
+    JOIN grades b
+    ON a.marks between b.min_mark and b.max_mark
+WHERE grade < 8
+ORDER BY 2 desc, 3;
+    
+-- Ollivander's Inventory
+-- syntax error
+
+with temp_01 as
+(
+    SELECT age, power, min(coins_needed) as coin
+    FROM wands a
+        JOIN wands_property b
+        ON a.code = b.code
+    WHERE is_evil = 0 
+    GROUP BY 1, 2
+    )
+SELECT y.id, y.age, coins_needed, y.power
+FROM temp_01 x
+    JOIN (SELECT * FROM wands a JOIN wands_property b ON a.code = b.code) y
+    ON x.age = y.age and x.power = y.power and x.coin = y.coins_needed
+ORDER BY power desc, age desc;
