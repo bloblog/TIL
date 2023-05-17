@@ -138,6 +138,26 @@ SELECT round(case when length(lat_n) % 2 = 1 then
     end, 4)
 FROM temp_01
 LIMIT 1;
+    
+-- 23.05.17 재도전
+-- length() 함수 쓰면 문자의 길이를 리턴한다. row 수 아님!
+-- max값 즉 총 row 개수 임시테이블로 따로 계산
+-- 총 개수가 짝수든 홀수든 포괄할 수 있는 조건 달아야 한다.
+
+with temp_01 as
+(
+    SELECT lat_n, row_number() over(order by lat_n) as rnk
+    FROM station
+    ), temp_02 as
+    (
+        SELECT *, max(rnk) over() as len
+        FROM temp_01
+        )
+
+SELECT round(avg(lat_n), 4) 
+FROM temp_02
+WHERE len/2 <= rnk 
+    and rnk <= len/2+1;
 
 ----------------------
 -- Top Competitors
@@ -188,3 +208,20 @@ FROM temp_01 x
     JOIN (SELECT * FROM wands a JOIN wands_property b ON a.code = b.code) y
     ON x.age = y.age and x.power = y.power and x.coin = y.coins_needed
 ORDER BY power desc, age desc;
+
+------------------------------------
+-- Contest Leaderboard (MS SQL 활용)
+with temp_01 as
+(
+    SELECT hacker_id, max(score) as max_score
+    FROM submissions
+    GROUP BY hacker_id, challenge_id
+    )
+    
+SELECT a.hacker_id, max(name), sum(max_score)
+FROM temp_01 a
+    JOIN hackers b 
+    ON a.hacker_id = b.hacker_id
+GROUP BY a.hacker_id
+HAVING sum(max_score) != 0
+ORDER BY 3 desc, 1;
