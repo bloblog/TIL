@@ -209,6 +209,22 @@ FROM temp_01 x
     ON x.age = y.age and x.power = y.power and x.coin = y.coins_needed
 ORDER BY power desc, age desc;
 
+-- 23.05.18 성공
+-- Ollivander's Inventory (MS SQL 활용)
+
+with temp_01 as
+(
+    SELECT id, age, power, coins_needed, min(coins_needed) over(partition by age, power) as min_coin
+    FROM wands a 
+        JOIN wands_property b 
+        ON a.code = b.code
+    WHERE is_evil = 0
+    )
+SELECT id, age, coins_needed, power
+FROM temp_01
+WHERE coins_needed = min_coin
+ORDER BY power desc, age desc;
+
 ------------------------------------
 -- Contest Leaderboard (MS SQL 활용)
 with temp_01 as
@@ -225,3 +241,46 @@ FROM temp_01 a
 GROUP BY a.hacker_id
 HAVING sum(max_score) != 0
 ORDER BY 3 desc, 1;
+
+--------------------
+
+-- Challenges
+
+with temp_01 as
+(
+    SELECT hacker_id, count(challenge_id) as total
+    FROM challenges
+    GROUP BY 1
+    )
+
+SELECT a.hacker_id, name, total
+FROM temp_01 a
+    JOIN hackers b
+    ON a.hacker_id = b.hacker_id
+WHERE total = (SELECT max(total) FROM temp_01)
+UNION ALL
+SELECT max(a.hacker_id), max(name), total
+FROM temp_01 a
+    JOIN hackers b
+    ON a.hacker_id = b.hacker_id
+GROUP BY total
+HAVING count(*) = 1
+ORDER BY 3 desc, 1; 
+
+-- Placements
+
+with temp_01 as
+(
+    SELECT a.id, friend_id, b.salary as my_sal, c.salary as fr_sal
+    FROM friends a
+        JOIN packages b
+        ON a.id = b.id
+        JOIN packages c
+        ON a.friend_id = c.id
+    )
+SELECT name
+FROM temp_01 x
+    JOIN students y
+    ON x.id = y.id
+WHERE my_sal < fr_sal
+ORDER BY fr_sal;
