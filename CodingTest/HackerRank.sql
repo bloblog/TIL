@@ -284,3 +284,22 @@ FROM temp_01 x
     ON x.id = y.id
 WHERE my_sal < fr_sal
 ORDER BY fr_sal;
+
+--------------------------------------------------
+-- Symmetric Pairs
+-- x, y가 같은 경우 본인을 제외하고 JOIN 해야 하는 게 포인트
+    
+with temp_01 as
+(
+    SELECT x, y
+    FROM functions
+    GROUP BY x, y
+    HAVING count(*)>=2 or (count(*)=1 and x != y)
+    )
+
+SELECT distinct a.x, a.y
+FROM functions a
+    JOIN temp_01 b
+    ON a.y = b.x and a.x = b.y
+WHERE a.x <= a.y
+ORDER BY a.x;
