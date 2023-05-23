@@ -303,3 +303,23 @@ FROM functions a
     ON a.y = b.x and a.x = b.y
 WHERE a.x <= a.y
 ORDER BY a.x;
+
+-------------------------
+-- SQL Project Planning
+
+with temp_01 as
+(
+    SELECT case when lag(end_date) over(order by start_date) != start_date or lag(end_date) over(order by end_date) is null then start_date end is_start,
+    case when lead(start_date) over(order by start_date) != end_date or lead(start_date) over(order by start_date) is null then end_date end is_end
+    FROM projects
+    ), temp_02 as
+    (
+        SELECT distinct 
+            case when is_start is not null then is_start else lag(is_start) over() end as project_start,
+            case when is_end is not null then is_end else lead(is_end) over() end as project_end
+        FROM temp_01
+        WHERE is_start is not null or is_end is not null
+        )
+SELECT *
+FROM temp_02
+ORDER BY datediff(project_end, project_start), 1;
