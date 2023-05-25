@@ -323,3 +323,41 @@ with temp_01 as
 SELECT *
 FROM temp_02
 ORDER BY datediff(project_end, project_start), 1;
+
+------------------------------
+-- 15 Days of Learning SQL
+-- MS SQL 활용
+
+with temp_01 as
+(
+    SELECT submission_date, hacker_id, count(distinct hacker_id) as cnt
+    FROM submissions
+    GROUP BY submission_date, hacker_id
+    ), temp_02 as
+    (
+        SELECT submission_date, hacker_id, 
+            sum(cnt) over(partition by hacker_id order by submission_date) as sum
+        FROM temp_01
+        ), temp_03 as
+        (
+            SELECT submission_date, hacker_id, count(submission_id) as sub
+            FROM submissions
+            GROUP BY submission_date, hacker_id
+            ), temp_04 as
+            (
+                SELECT submission_date, hacker_id, 
+                    row_number() over(partition by submission_date order by sub desc, hacker_id) as rnk
+                FROM temp_03
+            )
+
+SELECT a.submission_date, allday, a.hacker_id, name
+FROM temp_04 a
+    JOIN (SELECT submission_date, count(*) as allday
+            FROM temp_02
+            WHERE DAY(submission_date) = sum
+            GROUP BY submission_date) b
+    ON a.submission_date = b.submission_date
+    JOIN hackers c
+    ON a.hacker_id = c.hacker_id
+WHERE rnk = 1
+ORDER BY 1;
