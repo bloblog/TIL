@@ -361,3 +361,41 @@ FROM temp_04 a
     ON a.hacker_id = c.hacker_id
 WHERE rnk = 1
 ORDER BY 1;
+
+------------------
+-- Interviews
+
+with temp_01 as
+(
+    SELECT c.contest_id, a.challenge_id
+    FROM Challenges a
+        JOIN Colleges b
+        ON a.college_id = b.college_id
+        JOIN Contests c
+        ON b.contest_id = c.contest_id
+    ), view_gb as
+    (
+        SELECT challenge_id, sum(total_views) as total_views, sum(total_unique_views) as total_unique_views
+        FROM View_Stats
+        GROUP BY challenge_id
+        ), sub_gb as
+        (
+            SELECT challenge_id, sum(total_submissions) as total_submissions, sum(total_accepted_submissions) as total_accepted_submissions
+            FROM Submission_Stats
+            GROUP BY challenge_id
+            ), calc as
+            (
+                SELECT contest_id, sum(total_views) as total_views, sum(total_unique_views) as total_unique_views, sum(total_submissions) as total_submissions, sum(total_accepted_submissions) as total_accepted_submissions
+                FROM temp_01 a
+                    LEFT JOIN view_gb b
+                    ON a.challenge_id = b.challenge_id
+                    LEFT JOIN sub_gb c
+                    ON a.challenge_id = c.challenge_id
+                GROUP BY contest_id
+                )
+SELECT a.contest_id, hacker_id, name, total_submissions, total_accepted_submissions, total_views, total_unique_views
+FROM calc a
+    JOIN contests b
+    ON a.contest_id = b.contest_id
+WHERE total_submissions != 0 and total_accepted_submissions != 0 and total_views != 0 and total_unique_views != 0
+ORDER BY 1;
