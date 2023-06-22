@@ -29,3 +29,10 @@ FROM (SELECT Id, Name,
         ELSE GREATEST(Marks1, Marks2) END as Mark
     FROM Students
     ORDER BY Mark desc) A;
+
+-- Birthdays
+-- GROUP_CONCAT 함수 사용하기
+SELECT GROUP_CONCAT(Name) as Names
+FROM Students
+GROUP BY BirthDate
+ORDER BY BirthDate;
