@@ -117,3 +117,35 @@ FROM Matches a
 WHERE c.Cheater = 0
 GROUP BY Date
 ORDER BY Date;
+
+-- Top Performer
+
+SELECT (CASE WHEN Rating < 6 THEN NULL ELSE Name END) as Names, Rating
+FROM EMPLOYEE a
+    JOIN EVALUATION b
+    ON a.Points BETWEEN b.Lower AND b.Upper
+ORDER BY Rating desc, Name;
+
+-- Same Countries
+
+SELECT a.Name as "Labourer1", b.Name as "Labourer2", a.Country as "Country"
+FROM LABOURERS a
+    JOIN LABOURERS b
+    ON a.Country = b.Country AND a.ID != b.ID
+ORDER BY 1, 2;
+    
+
+-- Role Ordering
+-- 참고 사이트 (https://schatz37.tistory.com/12)
+
+SELECT MIN(CASE WHEN Role = 'Healer' THEN Player END) as `MIN(Healer)`,
+    MIN(CASE WHEN Role = 'Attacker' THEN Player END) as `MIN(Attacker)`,
+    MIN(CASE WHEN Role = 'Defender' THEN Player END) as `MIN(Defender)`,
+    MIN(CASE WHEN Role = 'Tactician' THEN Player END) as `MIN(Tactician)`
+FROM (select a.Role, a.Player, 1
+        , sum(1) as idx 
+    from GAMERS a 
+        join GAMERS b 
+        on (a.Role = b.Role and a.Player >= b.Player)
+    group by 1,2,3) A
+GROUP BY idx;
