@@ -149,3 +149,32 @@ FROM (select a.Role, a.Player, 1
         on (a.Role = b.Role and a.Player >= b.Player)
     group by 1,2,3) A
 GROUP BY idx;
+
+-- Next And Previous
+
+SELECT A.*, B.*
+FROM (select Marks, Id, Name
+        , (select count(*) 
+            from Students a 
+            where (a.Marks, a.Name) <= (b.Marks, b.Name)) as rownum 
+    from Students b) A
+    LEFT JOIN (select Marks, Id, Name
+            , (select count(*) 
+                from Students a 
+                where (a.Marks, a.Name) <= (b.Marks, b.Name)) as rownum 
+        from Students b) B 
+    ON A.rownum+1 = B.rownum
+ORDER BY A.Name;
+    
+-- Next And Previous 해답
+ 
+select 
+    lead(Marks) OVER (order by Marks) Next
+from Students order by Name;
+
+-- Role Counter
+
+SELECT CONCAT(Role, ' Count is ', COUNT(Player)) as `COUNT`
+FROM GAMERS
+GROUP BY Role
+ORDER BY COUNT(Player);
