@@ -4,8 +4,6 @@
 
 ## 설치 및 실행
 
----
-
 ### 관련 용어
 
 - JDK(Java Development Kit) : Java 프로그램을 실행하면 Java 코드를 컴파일하는 컴파일러와 개발에 필요한 각종 도구 그리고 JRE가 포함되어 있다. 즉 개발자를 위한 자바 버전
@@ -45,8 +43,6 @@
 
 ## 개발도구와 이클립스
 
----
-
 ### 이클립스 개요
 
 - 가장 대표적인 자바의 개발 도구
@@ -56,46 +52,42 @@
 ### 이클립스 사용법
 
 - 예제 생성 (w/ 이클립스)
-    - Create Java > `Java_tutorial 폴더` 만들어서 해당 폴더를 경로로 하는 프로젝트 생성 > 폴더 내부에 bin, src 폴더 자동으로 생성됨
-        
-        
-        ![java2](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/ea78f694-de9d-4bd7-beaf-2a4b767bc34c/Untitled.png)
-        
+    - Create Java > Java_tutorial 폴더 만들어서 해당 폴더를 경로로 하는 프로젝트 생성 > 폴더 내부에 bin, src 폴더 자동으로 생성됨
+
+        <img src="https://github.com/bloblog/TIL/blob/main/image/java2.png?raw=true" width="200" height="130"/>
+
         - bin (binary) : 실행파일. 즉 `.class` 파일
         - src (source) : `.java` 파일
-        
+
     - `New > Package` : 패키지 먼저 생성. 디렉토리 같은 역할
         - 일반적으로 도메인 주소(유일, 중복 방지)를 패키지 이름으로 사용
         - 패키지 이름의 `.` : 폴더 안의 폴더를 만들어준다.
     - `생성된 패키지 우클릭 > New > Class` : 클래스 생성하기
         - 자동으로 자바파일 만들어줌. 편리하게 생성 가능
         
-        ![Untitled](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/d5d0661a-551f-4634-80e0-4738687dd38f/Untitled.png)
+            ![java3](https://github.com/bloblog/TIL/blob/main/image/java3.png?raw=true)
         
-        ```java
-        package org.opentutorials.javatutorials.eclipse;
+            ```java
+            package org.opentutorials.javatutorials.eclipse;
+            
+            public class Helloworld {
+            
+                public static void main(String[] args) {
+                    // 이 부분에 실행되길 원하는 소스코드 작성하면 된다.
+            
+                }
+            
+            }
+            ```
         
-        public class Helloworld {
-        
-        	public static void main(String[] args) {
-        		// TODO Auto-generated method stub
-        		// 이 부분에 실행되길 원하는 소스코드 작성하면 된다.
-        
-        	}
-        
-        }
-        ```
-        
-- +) Ideone
-    
-    [Ideone.com](https://ideone.com/)
+- [Ideone.com](https://ideone.com/)
     
     - 온라인에서 소스코드를 공유하고 직접 실행해 볼 수 있는 도구
     - 개발환경이 갖춰지지 않아도 코드 테스트 가능
 
-## 숫자와 문자
+</br>
 
----
+## 숫자와 문자
 
 ### 숫자
 
@@ -150,37 +142,36 @@
     ```java
     System.out.println("생활"+"코딩");
     ```
-    
+
+</br>
 
 ## 변수
-
----
 
 ### 선언과 할당
 
 - 데이터 형식 명시 → 다른 데이터 타입 들어오면 컴파일조차 되지 않는다.
     - 정수
     
-    ```java
-    int a; // 데이터형식 변수이름 명시
-    a = 1; // 
-    System.out.println(a+1); //2
-     
-    a = 2;
-    System.out.println(a+1); //3
-    ```
+        ```java
+        int a; // 데이터형식 변수이름 명시
+        a = 1; // 
+        System.out.println(a+1); //2
+        
+        a = 2;
+        System.out.println(a+1); //3
+        ```
     
     - 실수
     
-    ```java
-    double a = 1.1; // 데이터형식(실수) 변수명 = 값 형식도 가능
-    System.out.println(a+1.1); // 2.2
-     
-    a = 2.1; 
-    System.out.println(a+1.1); // 3.2
-    ```
+        ```java
+        double a = 1.1; // 데이터형식(실수) 변수명 = 값 형식도 가능
+        System.out.println(a+1.1); // 2.2
+        
+        a = 2.1; 
+        System.out.println(a+1.1); // 3.2
+        ```
     
-- +) 에러가 나는 경우
+- 에러가 나는 경우
     
     ```java
     int a = 1.1; 
@@ -208,28 +199,28 @@ System.out.println(first+" "+"everybody");
 ### 변수의 효용
 
 - 코드의 재활용성을 높여준다
-- 변수 사용 x
+- 변수 사용 x ver.
 
-```java
-System.out.println(100 + 10);
-System.out.println((100 + 10) / 10);
-System.out.println(((100 + 10) / 10) - 10);
-System.out.println((((100 + 10) / 10) - 10) * 10);
-```
+    ```java
+    System.out.println(100 + 10);
+    System.out.println((100 + 10) / 10);
+    System.out.println(((100 + 10) / 10) - 10);
+    System.out.println((((100 + 10) / 10) - 10) * 10);
+    ```
 
-- 변수 사용
+- 변수 사용 ver.
 
-```java
-int a = 100;
-System.out.println(a + 10);
-System.out.println((a+ 10) / 10);
-System.out.println(((a + 10) / 10) - 10);
-System.out.println((((a + 10) / 10) - 10) * 10);
-```
+    ```java
+    int a = 100;
+    System.out.println(a + 10);
+    System.out.println((a+ 10) / 10);
+    System.out.println(((a + 10) / 10) - 10);
+    System.out.println((((a + 10) / 10) - 10) * 10);
+    ```
+
+</br>
 
 ## 주석과 세미콜론
-
----
 
 ### 주석
 
@@ -238,7 +229,7 @@ System.out.println((((a + 10) / 10) - 10) * 10);
     
     ```java
     public static void main(String[] args) {
-        **//** 두개의 변수가 같은 데이터 타입 일 때 아래와 같이 코드를 작성한다.
+        // 두개의 변수가 같은 데이터 타입 일 때 아래와 같이 코드를 작성한다.
         String a, b;
     }
     ```
@@ -248,11 +239,11 @@ System.out.println((((a + 10) / 10) - 10) * 10);
     ```java
     public static void main(String[] args) {
         String a, b;
-        **/***
+        /*
         a = "coding";
         b = "everybody";
         System.out.println(a+b);
-        ***/**
+        */
     ```
     
 - JavaDoc 주석
@@ -260,13 +251,13 @@ System.out.println((((a + 10) / 10) - 10) * 10);
     - 밑의 코드에 대한 문서 만들어준다.
     
     ```java
-    **/****
+    /**
      * Prints an integer and then terminate the line.  This method behaves as
      * though it invokes <code>{@link #print(int)}</code> and then
      * <code>{@link #println()}</code>.
      *
      * @param x  The <code>int</code> to be printed.
-     ***/**
+     */ 
     public void println(int x) {
         synchronized (this) {
             print(x);
@@ -280,38 +271,41 @@ System.out.println((((a + 10) / 10) - 10) * 10);
 
 - 문장 끝에 반드시 사용. 아니면 컴파일 에러남
 
-```java
-// assignment statement
-aValue = 8933.234;
-// increment statement
-aValue++;
-// method invocation statement
-System.out.println("Hello World!");
-// object creation statement
-Bicycle myBike = new Bicycle();
-```
+    ```java
+    // assignment statement
+    aValue = 8933.234;
+
+    // increment statement
+    aValue++;
+
+    // method invocation statement
+    System.out.println("Hello World!");
+
+    // object creation statement
+    Bicycle myBike = new Bicycle();
+    ```
 
 - 여러 문장 한 줄로 작성할 때도 사용
 
-```java
-int a = 100; double b = 10.1;
-```
+    ```java
+    int a = 100; double b = 10.1;
+    ```
+
+</br>
 
 ## 데이터 타입
 
----
-
 ### 데이터 타입 개요
-
-![Untitled](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/ffd0a388-0712-41c3-8b62-be778d8f0a36/Untitled.png)
-
 - 비트 = 0과 1
+![java4](https://github.com/bloblog/TIL/blob/main/image/java4.png?raw=true)
+
+
 
 ### 데이터 타입 비교
 
 - 정수형
     
-    ![Untitled](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/9c0397c3-3e19-4019-a84f-696affc3d954/Untitled.png)
+    ![java5](https://github.com/bloblog/TIL/blob/main/image/java5.png?raw=true)
     
     - 길이에 상관 없이 특정 데이터 타입을 사용하면 차지하는 메모리 동일
         
@@ -328,7 +322,7 @@ int a = 100; double b = 10.1;
     - float : 4바이트
     - double : 8바이트 / 실수형의 기본 포맷
 - 문자
-    - `char` : 한 글자당 2바이트
+    - char : 한 글자당 2바이트
     - e.g. 6글자 가진 String 타입 변수 = 12바이트 차지
 
 ### 상수의 데이터 타입
@@ -361,13 +355,13 @@ int a = 100; double b = 10.1;
         long a = 2147483648;
         ```
         
-    - 해결 → `디폴트 x 데이터타입` 변수 = 상수`동일한 데이터타입`;
+    - 해결 → 변수를 해당 값을 가질 수 있는 데이터타입으로 선언 + 변수와 동일한 데이터타입의 상수 집어넣기
         
         ```java
         long a = 2147483648L;
         ```
         
-    - +) byte, short는 int 형 허용
+    - 예외로 byte, short는 int 형 허용
         
         ```java
         // 에러 x
@@ -378,19 +372,17 @@ int a = 100; double b = 10.1;
 
 ### 형변환
 
-<aside>
-❓ **형변환 하는 이유**
+❓ __형변환 하는 이유__
 
 같은 값이라도 데이터 타입이 다르면 비트값이 완전히 다르므로, 서로 다른 형식끼리 계산하려면 형변환이 필요하다!
 
-</aside>
 
 - 자동 형 변환
 - 명시적 형 변환
 
-## 연산자
+</br>
 
----
+## 연산자
 
 ### 비교와 Boolean
 
@@ -400,6 +392,7 @@ int a = 100; double b = 10.1;
 
 ### 반복문
 
-## 배열
 
----
+</br>
+
+## 배열
