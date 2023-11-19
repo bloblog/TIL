@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ssafit.pjt.model.dao.ReviewDao">
+
+	<insert id="insertReview" parameterType="Review">
+		INSERT INTO review (studyKey, reviewTitle, reviewContent, reviewDate, reviewImgPath)
+		VALUES (#{studyKey}, #{reviewTitle}, #{reviewContent}, #{reviewDate}, #{reviewImgPath});
+	</insert>
+	
+	<update id="updateRelation" parameterType="hashMap">
+		UPDATE study_user_review
+		SET reviewKey = #{reviewKey}
+		WHERE userKey = #{userKey} AND studyKey = #{studyKey}
+	</update>
+	
+	<update id="updateExp" parameterType="hashMap">
+		UPDATE user
+		SET exp = #{userExp} + 100
+		WHERE userKey = #{userKey}
+	</update>
+	
+	<update id="updateViewCnt" parameterType="int">
+		UPDATE review
+		SET viewCnt = #{viewCnt} + 1
+		WHERE reviewKey = #{reviewKey}
+	</update>
+	
+	<select id="selectReview" parameterType="int" resultType="Review">
+		SELECT *
+		FROM review
+		WHERE reviewKey = #{reviewKey}
+	</select>
+	
+	<select id="selectWriter" parameterType="int" resultType="int">
+		SELECT userKey
+		FROM study_user_review
+		WHERE reviewKey = #{reviewKey}
+	</select>
+	
+	<select id="selectReviewKeys" parameterType="hashmap" resultType="Review">
+		SELECT *
+		FROM review r
+			INNER JOIN study_user_review sur
+			ON r.studyKey = sur.studyKey
+		WHERE userKey = #{userKey}
+	</select>
+
+	
+	<update id="updateReview" parameterType="Review">
+		UPDATE review
+		SET reviewTitle = #{reviewTitle},
+			reviewContent = #{reviewContent},
+			reviewImgPath = #{reviewImgPath}
+		WHERE reviewKey = #{reviewKey}
+	</update>
+	
+	<delete id="deleteReview" parameterType="int">
+		DELETE FROM review
+		WHERE reviewKey = #{reviewKey}
+	</delete>
+	
+	<select id="selectList" parameterType="SearchCondition" resultType="Review">
+		SELECT * 
+		FROM review r
+			INNER JOIN study_user_review sur
+			ON r.studyKey = sur.studyKey
+				AND r.reviewKey = sur.reviewKey
+		<if test="key != 'none'">
+			WHERE ${key} = #{word}
+		</if>
+		<if test="orderBy != 'none'">
+			ORDER BY ${orderBy} ${orderByDir}
+		</if>
+	</select>
+
+
+</mapper>

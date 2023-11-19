@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ssafit.pjt.model.dao.StudyDao">
+
+	<insert id="insertStudy" parameterType="Study" >
+		INSERT INTO study (leaderKey, studyName, category, studyStart, studyEnd, alarm)
+		VALUES (#{leaderKey}, #{studyName}, #{category}, #{studyStart}, #{studyEnd}, #{alarm})
+	</insert>
+	
+	<insert id="insertRelation" parameterType="map">
+		INSERT INTO study_user_review (studyKey, userKey)
+		VALUES (#{studyKey}, #{userKey})
+	</insert>
+
+	<select id="getTodoKeys" parameterType="int" resultType="list">
+		SELECT todoKey
+		FROM study_todo
+		WHERE studyKey = #{studyKey}
+	</select>
+
+	<update id="updateStudy" parameterType="Study">
+		UPDATE study 
+		SET studyName = #{studyName}, category = #{category}, studyEnd = #{studyEnd}, alarm = #{alarm}
+		WHERE studyKey = #{studyKey}
+	</update>
+	
+	<delete id="deleteRelation" parameterType="hashMap">
+		DELETE FROM study_user_review
+		WHERE studyKey = #{studyKey} AND userKey = #{userKey}
+	</delete>
+	
+	<delete id="deleteStudy" parameterType="int">
+		DELETE FROM study
+		WHERE studyKey = #{studyKey}
+	</delete>
+	
+	<select id="selectOne" parameterType="int" resultType="Study">
+		SELECT *
+		FROM study
+		WHERE studyKey = #{studyKey}
+	</select>
+	
+	<select id="selectOneByName" parameterType="String" resultType="Study">
+		SELECT *
+		FROM study
+		WHERE studyName = #{studyName}
+	</select>
+
+</mapper>

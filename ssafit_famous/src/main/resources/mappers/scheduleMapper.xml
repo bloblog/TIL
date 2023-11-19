@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ssafit.pjt.model.dao.ScheduleDao">
+
+	<insert id="insertSchedule" parameterType="Schedule" >
+		INSERT INTO schedule (studyKey,scheduleDate, scheduleContent, schedulePlace)
+		VALUES (#{studyKey}, #{scheduleDate}, #{scheduleContent}, #{schedulePlace})
+	</insert>
+	
+	<insert id="insertRelation" parameterType="hashMap">
+		INSERT INTO study_schedule
+		VALUES (#{studyKey}, #{scheduleKey})
+	</insert>
+
+	<update id="updateSchedule" parameterType="Schedule">
+		UPDATE schedule 
+		SET scheduleDate = #{scheduleDate}, scheduleContent = #{scheduleContent}, schedulePlace = #{schedulePlace}
+		WHERE scheduleKey = #{scheduleKey}
+	</update>
+	
+	<delete id="deleteSchedule" parameterType="int">
+		DELETE FROM schedule
+		WHERE scheduleKey = #{scheduleKey}
+	</delete>
+	
+	<delete id="deleteRelation" parameterType="hashMap">
+		DELETE FROM study_schedule
+		WHERE scheduleKey = #{scheduleKey} AND studyKey = #{studyKey}
+	</delete>
+	
+	
+	<select id="selectOne" parameterType="int" resultType="Schedule">
+		SELECT *
+		FROM schedule
+		WHERE scheduleKey = #{scheduleKey}
+	</select>
+	
+	<select id="selectOneBySchedule" parameterType="Schedule" resultType="Schedule">
+		SELECT *
+		FROM schedule
+		WHERE scheduleContent = #{scheduleContent} 
+			AND scheduleDate = #{scheduleDate}
+			AND schedulePlace = #{schedulePlace}
+			AND studyKey = #{studyKey}  
+	</select>
+
+</mapper>

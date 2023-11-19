@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ssafit.pjt.model.dao.UserDao">
+
+	<select id="selectUser" parameterType="int" resultType="User">
+		SELECT *
+		FROM user
+		WHERE userKey = #{userKey}
+	</select>
+	
+	<select id="selectUserById" parameterType="String" resultType="User">
+		SELECT *
+		FROM user
+		WHERE id = #{id}
+	</select>
+
+	<insert id="insertUser" parameterType="User">
+		INSERT INTO user (id, password, userImgPath)
+		VALUES (#{id}, #{password}, #{userImgPath})
+	</insert>
+	
+	<update id="updateUser" parameterType="User">
+		UPDATE user
+		SET password = #{password}, 
+			userImgPath = #{userImgPath},
+			exp = #{exp}
+		WHERE userKey = #{userKey}
+	</update>
+	
+	<delete id="deleteUser" parameterType="int">
+		DELETE FROM user
+		WHERE userKey = #{userKey}
+	</delete>
+	
+	<select id="selectUserList" parameterType="String" resultType="User">
+		SELECT *
+		FROM user
+		WHERE id LIKE concat("%", #{id}, "%")
+	</select>
+
+
+</mapper>
