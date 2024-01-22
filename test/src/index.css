@@ -1,0 +1,51 @@
+#nav-bar {
+    justify-content: space-between;
+    display: flex;
+    padding: 1rem;
+    background-color: rgba(52, 52, 52, 1);
+}
+
+#nav-bar #logo {
+    width: 7rem;
+    height: 3rem;
+    object-fit: contain;
+    background-color: transparent;
+}
+
+#profile-image {
+    width: 3rem;
+    padding: 0.2rem;
+}
+
+#profile-image-container {
+    display:flex;
+    align-items:center;
+    justify-content:center;
+}
+  
+.gradient-border.background-image {
+    border-radius:50%;
+    background-image:linear-gradient(to right, rgba(251, 55, 163, 1), rgba(249, 209, 233, 1));
+    background-origin:border-box; 
+    background-clip:padding-box, border-box;
+}
+
+#bell-icon {
+    font-size: 2.5rem;
+    width: 3rem;
+}
+
+#nav-menus {
+    display: flex;
+    align-items: center;
+    width: 9rem;
+    justify-content: space-evenly;
+    
+}
+
+
+
+
+
+
+
