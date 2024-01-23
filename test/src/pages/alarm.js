@@ -1,8 +1,10 @@
 //알림페이지
+import AlarmList from '../components/Alarm/AlarmList';
+
 const alarm = () => {
     return (
         <div id='alarm-page'>
-            <h1>알람페이지</h1>
+            <AlarmList/>
         </div>
     );
 };

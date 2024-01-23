@@ -1,9 +1,12 @@
-//메인페이지
+import { Container } from '@mui/material';
+import ChartTab from '../components/Chart/ChartTab';
+
 const main = () => {
     return (
-        <div>
+        <Container>
             <h1>메인페이지</h1>
-        </div>
+            <ChartTab/>
+        </Container>
     );
 };
 

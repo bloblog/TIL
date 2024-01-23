@@ -1,3 +1,13 @@
+:root {
+    --primary-color: #FB37A3;
+    --secondary-color: #FD9DD1;
+    --info-color: #FFFFFF;
+  }
+
+* {
+    max-width: 600px;
+}
+
 #nav-bar {
     justify-content: space-between;
     display: flex;
@@ -43,9 +53,63 @@
     
 }
 
+#menu-appbar {
+    text-align: center;
+}
 
+.dropdown-icon {
+    padding-right: 10px;
+}
 
+#gps-top {
+    display: flex;
+    justify-content: center;
+}
 
+#gps-bottom {
+    display: flex;
+    justify-content: space-evenly;
+    margin: 1rem 0;
+}
 
+#refresh-container {
+    display: flex;
+    align-items: center;
+    padding: 0.5rem;
+}
 
+.alarm-read-item {
+    border-top: #FB37A3 2px solid;
+    margin: 0.2rem;
+    background-color: rgba(242, 244, 248, 1);
+}
 
+.alarm-item {
+    border-top: rgba(105, 112, 119, 1) 2px solid;
+    margin: 0.2rem;
+}
+
+#alarm-check-all {
+    display: flex;
+    justify-content: end;
+}
+
+#alarm-time {
+    font-size: 10px;
+}
+
+#rank-1-idol {
+    display: flex;
+    align-items: center;
+    padding: 0.5rem;
+}
+
+#rank-23-idol {
+    display: flex;
+    flex-direction: column;
+}
+
+#chart-container {
+    display: flex;
+    
+}
