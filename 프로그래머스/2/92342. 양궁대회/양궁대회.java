@@ -2,64 +2,71 @@ import java.util.*;
 
 class Solution {
     public int[] solution(int n, int[] info) {
-        // 라이언이 맞힐 화살 개수
-        // 10 ~ 0점
-        int[] score = new int[11];
-        max = -1;
+        // 어피치 10 ~ 0 과녁에 맞힌 화살 수 info
+        answer = new int[11];
 
-        // score 담을 pq
-        PriorityQueue<int[]> pq = new PriorityQueue<>(new Comparator<int[]>() {
-            @Override
-            public int compare(int[] o1, int[] o2) {
-                // 낮은 점수가 더 많아야 함
-                for (int i = o1.length - 1; i >= 0; i--) {
-                    if (o1[i] < o2[i]) return 1;
-                    else if (o1[i] > o2[i]) return -1;
-                }
-                return 0;
-            }
-        });
-        dfs(n, 10, info, score, pq);
+        shoot(0, 0, n, new int[11], info);
 
-        if (max == -1) {
-            return new int[] {-1};
-        }
-
-        return pq.poll();
+        if (max == 0) return new int[] {-1};
+        return answer;
     }
-    
-    static int max;
 
-    static void dfs(int n, int st, int[] info, int[] score, PriorityQueue<int[]> pq) {
-        if (n == 0) {
-            // 라이언이 score를 냈을 때 결과 판별
-            int sumL = 0;
-            int sumA = 0;
-            for (int i = 10; i >= 0; i--) {
-                // 둘 다 0이면 계산 x
-                if (score[10-i] == 0 && info[10-i] == 0) continue;
-                if (score[10-i] > info[10-i]) sumL += i;
-                else sumA += i;
+    static int max = 0; // 점수 차
+    static int[] answer;
+
+    static boolean checkLowScore(int[] arr) {
+        // 현재 answer 과 비교
+        for (int i = 10; i >= 0; i--) {
+            if (answer[i] == arr[i]) continue;
+            if (answer[i] > arr[i]) {
+                return false;
+            } else {
+                return true;
             }
+        }
+        return false;
+    }
 
-            if (sumL > sumA && max <= sumL - sumA) {
-                if (sumL - sumA != max) {
-                    max = sumL - sumA;
-                    pq.clear();
+    static void shoot(int cnt, int st, int n, int[] shoot, int[] info) {
+        if (cnt == n) {
+            // 점수 차 계산
+            int gap = calcScore(info, shoot);
+            if (gap >= 0 && gap >= max) {
+                if (gap > max) {
+                    answer = Arrays.copyOf(shoot, 11);
+                } else if (checkLowScore(shoot)) {
+                    answer = Arrays.copyOf(shoot, 11);
                 }
-                pq.add(score.clone());
+                max = gap;
             }
             return;
         }
 
-        for (int i = st; i >= 0; i--) {
-            // 남은 화살로 가능한지 체크
-            int spend = info[10-i] + 1 > n ? n : info[10-i] + 1;
-            score[10-i] += spend;
-            dfs(n - spend, i, info, score, pq);
-            score[10-i] -= spend;
-
-
+        for (int i = st; i <= 10; i++) {
+            if (info[i] + 1 <= n - cnt) {
+                shoot[i] += info[i] + 1;
+                shoot(cnt+info[i]+1, i, n, shoot, info);
+                shoot[i] -= info[i] + 1;
+            } else {
+                shoot[i] += n - cnt;
+                shoot(n, i+1, n, shoot, info);
+                shoot[i] -= n - cnt;
+            }
         }
+    }
+
+    static int calcScore(int[] apeach, int[] lion) {
+        // 라이언 - 어피치 점수 리턴
+        int a = 0;
+        int l = 0;
+        for (int i = 10; i >= 0; i--) {
+            if (apeach[10-i] == 0 && lion[10-i] == 0) continue;
+            if (apeach[10-i] >= lion[10-i]) {
+                a += i;
+            } else {
+                l += i;
+            }
+        }
+        return l - a;
     }
 }
